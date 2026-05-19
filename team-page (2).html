@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ons Team – IN-IT</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kleur-donker: #162847;
+    --kleur-accent: #C99535;
+    --kleur-accent2: #a87d28;
+    --kleur-grijs: #f3f2ee;
+    --kleur-creme: #E8DFC8;
+    --kleur-tekst: #1a1a2e;
+    --kleur-subtekst: #5a6275;
+    --kleur-wit: #ffffff;
+    --radius: 12px;
+    --overgang: 0.3s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--kleur-wit); color: var(--kleur-tekst); min-height: 100vh; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: var(--kleur-donker); padding: 0 2.5rem; display: flex; align-items: center; justify-content: space-between; height: 68px; box-shadow: 0 2px 20px rgba(0,0,0,0.18); }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--kleur-wit); text-decoration: none; letter-spacing: -0.5px; display: flex; align-items: center; }
+  .nav-logo span { color: var(--kleur-accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color var(--overgang); }
+  .nav-links a:hover, .nav-links a.actief { color: var(--kleur-wit); }
+
+  .hero { background: var(--kleur-donker); padding: 5rem 2.5rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 380px; height: 380px; background: radial-gradient(circle, rgba(201,149,53,0.18) 0%, transparent 70%); pointer-events: none; }
+  .hero-inner { max-width: 900px; margin: 0 auto; }
+  .hero-label { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.65); font-size: 0.78rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; color: var(--kleur-wit); line-height: 1.1; margin-bottom: 1.25rem; letter-spacing: -1px; }
+  .hero h1 em { font-style: normal; color: var(--kleur-accent); }
+  .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.6); line-height: 1.75; max-width: 620px; font-weight: 300; }
+
+  .filter-bar { background: var(--kleur-grijs); padding: 1rem 2.5rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e8e6e0; flex-wrap: wrap; }
+  .filter-label { font-size: 0.8rem; font-weight: 500; color: var(--kleur-subtekst); text-transform: uppercase; letter-spacing: 1px; margin-right: 0.5rem; }
+  .filter-btn { background: none; border: 1.5px solid transparent; border-radius: 50px; padding: 5px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all var(--overgang); color: var(--kleur-subtekst); font-family: 'DM Sans', sans-serif; }
+  .filter-btn:hover { color: var(--kleur-tekst); border-color: #ccc; }
+  .filter-btn.actief { background: var(--kleur-donker); color: var(--kleur-wit); border-color: var(--kleur-donker); }
+  .zoek-wrap { margin-left: auto; position: relative; }
+  .zoek-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--kleur-subtekst); pointer-events: none; }
+  .zoek-input { border: 1.5px solid #ddd; border-radius: 50px; padding: 6px 14px 6px 34px; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; outline: none; background: var(--kleur-wit); width: 200px; transition: border var(--overgang); }
+  .zoek-input:focus { border-color: var(--kleur-accent); }
+
+  /* IMPORT BALK */
+  .import-balk { background: #fff; border-bottom: 1.5px solid #eaeae8; padding: 0.8rem 2.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .import-balk-label { font-size: 0.82rem; color: var(--kleur-subtekst); font-weight: 500; }
+  .import-knop { display: inline-flex; align-items: center; gap: 6px; background: var(--kleur-donker); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background var(--overgang); }
+  .import-knop:hover { background: #162540; }
+  .import-knop svg { width: 14px; height: 14px; flex-shrink: 0; }
+  #csvInput { display: none; }
+  .import-teller { font-size: 0.78rem; background: var(--kleur-grijs); padding: 5px 14px; border-radius: 50px; color: var(--kleur-subtekst); }
+  .import-teller strong { color: var(--kleur-tekst); }
+
+  /* DROP OVERLAY */
+  .drop-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(10,22,40,0.8); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+  .drop-overlay.actief { display: flex; }
+  .drop-box { border: 3px dashed rgba(255,255,255,0.4); border-radius: 20px; padding: 3rem 4rem; text-align: center; color: white; }
+  .drop-box svg { width: 48px; height: 48px; margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; opacity: 0.7; }
+  .drop-box h2 { font-family: 'Syne', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .drop-box p { opacity: 0.6; font-size: 0.9rem; }
+
+  /* TEAM GRID */
+  .team-sectie { max-width: 1280px; margin: 0 auto; padding: 3rem 2.5rem 5rem; }
+  .team-teller { font-size: 0.85rem; color: var(--kleur-subtekst); margin-bottom: 1.5rem; }
+  .team-teller strong { color: var(--kleur-tekst); }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+
+  .kaart { background: var(--kleur-wit); border: 1.5px solid #eaeae8; border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: transform var(--overgang), box-shadow var(--overgang), border-color var(--overgang); position: relative; }
+  .kaart:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(10,22,40,0.12); border-color: var(--kleur-accent); }
+  .kaart-foto-wrap { width: 100%; aspect-ratio: 1/1; overflow: hidden; background: var(--kleur-grijs); }
+  .kaart-foto-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.4s ease; }
+  .kaart:hover .kaart-foto-wrap img { transform: scale(1.04); }
+  .avatar-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #162847, #2a4a7a); font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; color: var(--kleur-donker); opacity: 0.5; }
+  .kaart-info { padding: 1rem 1.1rem 1.1rem; border-top: 1.5px solid #eaeae8; }
+  .kaart-naam { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--kleur-tekst); margin-bottom: 3px; line-height: 1.3; }
+  .kaart-rol { font-size: 0.75rem; color: var(--kleur-subtekst); font-weight: 400; line-height: 1.4; }
+  .kaart-linkedin { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: var(--kleur-donker); border-radius: 6px; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(-4px); transition: opacity var(--overgang), transform var(--overgang); text-decoration: none; z-index: 2; }
+  .kaart:hover .kaart-linkedin { opacity: 1; transform: translateY(0); }
+  .kaart-linkedin svg { width: 16px; height: 16px; fill: white; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,22,40,0.6); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; padding: 1.5rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--kleur-wit); border-radius: 20px; max-width: 760px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
+  @keyframes modalIn { from { opacity:0; transform: scale(0.9) translateY(20px); } to { opacity:1; transform: scale(1) translateY(0); } }
+  .modal-sluit { position: absolute; top: 1.25rem; right: 1.25rem; width: 36px; height: 36px; background: var(--kleur-grijs); border: none; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; color: var(--kleur-subtekst); transition: background var(--overgang); z-index: 1; }
+  .modal-sluit:hover { background: #e0deda; }
+  .modal-header { display: flex; gap: 2rem; padding: 2rem 2rem 1.5rem; border-bottom: 1.5px solid #eaeae8; align-items: flex-start; }
+  .modal-foto { width: 120px; height: 120px; border-radius: 12px; object-fit: cover; object-position: center top; flex-shrink: 0; }
+  .modal-foto-placeholder { width: 120px; height: 120px; border-radius: 12px; flex-shrink: 0; background: linear-gradient(135deg, #162847, #2a4a7a); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--kleur-donker); opacity: 0.5; }
+  .modal-meta { flex: 1; }
+  .modal-naam { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--kleur-tekst); line-height: 1.15; margin-bottom: 0.3rem; }
+  .modal-rol { font-size: 0.88rem; color: var(--kleur-subtekst); margin-bottom: 1rem; line-height: 1.5; }
+  .modal-linkedin-btn { display: inline-flex; align-items: center; gap: 7px; background: #0077B5; color: white; text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 7px 14px; border-radius: 6px; transition: background var(--overgang); font-family: 'DM Sans', sans-serif; }
+  .modal-linkedin-btn:hover { background: #005f90; }
+  .modal-linkedin-btn svg { width: 15px; height: 15px; fill: white; }
+  .modal-body { padding: 1.75rem 2rem 2rem; }
+  .modal-bio { font-size: 0.95rem; line-height: 1.8; color: var(--kleur-tekst); font-weight: 300; }
+  .modal-sectie-titel { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--kleur-subtekst); margin-bottom: 0.6rem; margin-top: 1.5rem; }
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .modal-tag { background: var(--kleur-grijs); border-radius: 50px; padding: 4px 14px; font-size: 0.78rem; color: var(--kleur-tekst); }
+  .modal-quote { border-left: 3px solid var(--kleur-accent); padding: 0.75rem 1.25rem; margin-top: 1.5rem; background: #fdf8ee; border-radius: 0 8px 8px 0; }
+  .modal-quote p { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600; color: var(--kleur-tekst); font-style: italic; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--kleur-donker); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 500; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.35s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.2); pointer-events: none; }
+  .toast.zichtbaar { transform: translateY(0); opacity: 1; }
+  .toast.succes { border-left: 4px solid #22c55e; }
+  .toast.fout { border-left: 4px solid var(--kleur-accent); }
+
+  .geen-resultaat { text-align: center; padding: 4rem 1rem; color: var(--kleur-subtekst); display: none; grid-column: 1/-1; }
+  .geen-resultaat.zichtbaar { display: block; }
+
+  footer { background: var(--kleur-donker); color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; font-size: 0.8rem; }
+  footer strong { color: rgba(255,255,255,0.85); }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 1.25rem; }
+    .hero { padding: 3rem 1.25rem 2.5rem; }
+    .filter-bar, .import-balk { padding: 0.75rem 1.25rem; }
+    .zoek-wrap { margin-left: 0; width: 100%; }
+    .zoek-input { width: 100%; }
+    .team-sectie { padding: 2rem 1.25rem 3rem; }
+    .modal-header { flex-direction: column; align-items: center; text-align: center; }
+    .modal-body { padding: 1.25rem 1.25rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo"><img src="logo.png" alt="IN-IT Logo" style="height:42px; width:42px; object-fit:cover; border-radius:6px; margin-right:10px; vertical-align:middle;"><span style="color:var(--kleur-creme); font-size:1.3rem;">IN-IT</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Evenementen</a></li>
+    <li><a href="#" class="actief">Ons Team</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">
+      <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="6" fill="#C99535"/></svg>
+      Iraqi Network of IT
+    </div>
+    <h1>Ontmoet ons<br><em>IN-IT netwerk</em></h1>
+    <p>Het Iraqi Network of Information Technology verbindt IT-professionals met Iraakse roots die actief zijn in Nederland. Samen bouwen we aan een sterke, kennisgedreven gemeenschap van data-experts, developers, architecten en consultants.</p>
+  </div>
+</section>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="filter-btn actief" data-filter="alles">Alles</button>
+  <div class="zoek-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="zoek-input" type="text" id="zoekbalk" placeholder="Zoek op naam…">
+  </div>
+</div>
+
+<!-- ✅ IMPORT BALK — sleep of klik om Profile.csv bestanden toe te voegen -->
+<div class="import-balk">
+  <span class="import-balk-label">📥 Nieuw lid toevoegen:</span>
+  <button class="import-knop" onclick="document.getElementById('csvInput').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Profile.csv uploaden
+  </button>
+  <input type="file" id="csvInput" accept=".csv" multiple>
+  <span class="import-teller"><strong id="aantalLeden">1</strong> lid(en) geladen</span>
+  <span style="font-size:0.75rem; color: var(--kleur-subtekst);">of sleep een CSV-bestand naar het scherm</span>
+</div>
+
+<!-- DROP OVERLAY -->
+<div class="drop-overlay" id="dropOverlay">
+  <div class="drop-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <h2>Sleep Profile.csv hier naartoe</h2>
+    <p>Laat los om het profiel automatisch toe te voegen</p>
+  </div>
+</div>
+
+<section class="team-sectie">
+  <div class="team-teller" id="teamTeller"></div>
+  <div class="team-grid" id="teamGrid">
+    <p class="geen-resultaat" id="geenResultaat">Geen leden gevonden.</p>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-sluit" id="modalSluit" aria-label="Sluit">✕</button>
+    <div class="modal-header">
+      <div id="modalFotoWrap"></div>
+      <div class="modal-meta">
+        <h2 class="modal-naam" id="modalNaam"></h2>
+        <p class="modal-rol" id="modalRol"></p>
+        <a href="#" class="modal-linkedin-btn" id="modalLinkedin" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn profiel bekijken
+        </a>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-bio" id="modalBio"></p>
+      <div id="modalTagsWrap" style="display:none">
+        <div class="modal-sectie-titel">Info</div>
+        <div class="modal-tags" id="modalTags"></div>
+      </div>
+      <div class="modal-quote" id="modalQuoteWrap" style="display:none">
+        <p id="modalQuote"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <strong>IN-IT</strong> · Iraqi Network of Information Technology · Gebouwd met ❤️ voor onze gemeenschap
+</footer>
+
+<script>
+/* ── STARTDATA (Ashraf Arab — geïmporteerd via LinkedIn export) ── */
+let teamleden = [
+  {
+    naam: "Ashraf Arab",
+    rol: "Sr. Data IT Specialist | Driving business growth through smart data and secure systems",
+    foto: "",   /* ← pad naar foto bijv: "fotos/ashraf.jpg" */
+    bio: "Ashraf is gepassioneerd over het oplossen van complexe bedrijfsproblemen door de kracht van data te combineren met de noodzaak van beveiliging. Met een nieuwsgierige mindset en strategische aanpak helpt hij organisaties betere beslissingen te nemen, hun assets te beschermen en op de lange termijn beter te presteren. Met meer dan 20 jaar ervaring in enterprise-omgevingen en een achtergrond in Business Information, verbindt hij inzicht en bescherming — zodat bedrijven met vertrouwen kunnen groeien.",
+    quote: "Using data to move forward and security to stay in control.",
+    linkedin: "https://nl.linkedin.com/in/ashraf-arab-0192536",
+    industrie: "Financial Services",
+    locatie: "The Randstad, Nederland",
+    categorie: "alles"
+  },
+  {
+    naam: "Ibrahim Al-Dalaimi",
+    rol: "Ervaren Java Developer",
+    foto: "",   /* ← pad naar foto bijv: "fotos/ibrahim.jpg" */
+    bio: "Op 14-jarige leeftijd ontdekte Ibrahim zijn passie voor softwareontwikkeling — beginnend met het bouwen van websites voor vrienden en familie. Al snel toonden lokale bedrijven interesse en verhuurde hij zichzelf uit als Freelance Full Stack Developer. In de loop der jaren groeide hij uit tot een enthousiaste en ambitieuze softwareontwikkelaar. Na zijn afstuderen als Software Engineer aan de Hogeschool Windesheim te Zwolle, vervult hij nu een managing rol binnen Nederland Eet Groep B.V. Als teamspeler houdt hij van uitdagingen en denkt hij graag mee met creatieve, innovatieve en out-of-the-box ideeën.",
+    quote: "Uitdagingen zijn de motor van innovatie.",
+    linkedin: "",
+    industrie: "Technology, Information and Internet",
+    locatie: "Zwolle, Overijssel, Nederland",
+    categorie: "alles"
+  },
+  {
+    naam: "Ehab Nabiel Al-Khannaq",
+    rol: "Dr.-Ing. | DevOps | Cloud Architect | AIOps | ASML",
+    foto: "",
+    bio: "Ehab is een ervaren Cloud Solution Architect en DevOps Engineer met meer dan 15 jaar IT-ervaring, waarvan meer dan 6 jaar als leider van Azure cloud-initiatieven in uiteenlopende sectoren. Hij heeft bewezen expertise in het ontwerpen van veilige, schaalbare en geautomatiseerde cloud-native architecturen. Hij blinkt uit in het aansturen van cross-functionele teams, het transformeren van legacy-systemen en het afstemmen van IT-strategieën op organisatiedoelen.",
+    quote: "Secure, scalable, and automated — that's the cloud done right.",
+    linkedin: "",
+    industrie: "IT Services and IT Consulting",
+    locatie: "Nederland",
+    categorie: "alles"
+  }
+];
+
+/* ── HELPERS ── */
+function initialen(naam) {
+  return naam.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0, 2).join('');
+}
+
+function toonToast(bericht, type = 'succes') {
+  const t = document.getElementById('toast');
+  t.textContent = bericht;
+  t.className = `toast ${type} zichtbaar`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+/* ── CSV PARSER ── */
+function parseerCSV(tekst) {
+  const regels = [];
+  let veld = '', record = [], inQuote = false;
+  for (let i = 0; i < tekst.length; i++) {
+    const c = tekst[i];
+    if (c === '"') {
+      if (inQuote && tekst[i+1] === '"') { veld += '"'; i++; }
+      else inQuote = !inQuote;
+    } else if (c === ',' && !inQuote) {
+      record.push(veld); veld = '';
+    } else if ((c === '\n' || c === '\r') && !inQuote) {
+      record.push(veld); veld = '';
+      if (record.some(v => v.trim())) regels.push(record);
+      record = [];
+      if (c === '\r' && tekst[i+1] === '\n') i++;
+    } else veld += c;
+  }
+  if (record.length) { record.push(veld); regels.push(record); }
+  return regels;
+}
+
+function csvNaarLid(tekst, bestandsnaam) {
+  const regels = parseerCSV(tekst);
+  if (regels.length < 2) return null;
+  const headers = regels[0].map(h => h.trim().toLowerCase());
+  const data = regels[1];
+  const v = (n) => { const i = headers.indexOf(n); return (i >= 0 && data[i]) ? data[i].trim() : ''; };
+
+  const naam = (v('first name') + ' ' + v('last name')).trim() || bestandsnaam.replace('.csv','');
+  if (!naam) return null;
+
+  return {
+    naam,
+    rol: v('headline') || 'Professional',
+    foto: '',
+    bio: v('summary') || '',
+    quote: '',
+    linkedin: '',
+    industrie: v('industry'),
+    locatie: v('geo location'),
+    categorie: 'alles'
+  };
+}
+
+/* ── KAARTEN & GRID ── */
+function bouwKaart(lid) {
+  const kaart = document.createElement('div');
+  kaart.className = 'kaart';
+  kaart.dataset.naam = lid.naam.toLowerCase();
+  kaart.dataset.categorie = lid.categorie || 'alles';
+
+  const foto = lid.foto
+    ? `<img src="${lid.foto}" alt="${lid.naam}" loading="lazy">`
+    : `<div class="avatar-placeholder">${initialen(lid.naam)}</div>`;
+
+  const li = lid.linkedin
+    ? `<a class="kaart-linkedin" href="${lid.linkedin}" target="_blank" rel="noopener"
+         aria-label="LinkedIn van ${lid.naam}" onclick="event.stopPropagation()">
+         <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7H8v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+       </a>` : '';
+
+  kaart.innerHTML = `<div class="kaart-foto-wrap">${foto}</div>${li}<div class="kaart-info"><div class="kaart-naam">${lid.naam}</div><div class="kaart-rol">${lid.rol}</div></div>`;
+  kaart.addEventListener('click', () => openModal(lid));
+  return kaart;
+}
+
+let huidigFilter = 'alles', huidigZoek = '';
+
+function renderGrid() {
+  const grid = document.getElementById('teamGrid');
+  grid.querySelectorAll('.kaart').forEach(k => k.remove());
+  let n = 0;
+  teamleden.forEach(lid => {
+    const catOk = huidigFilter === 'alles' || lid.categorie === huidigFilter;
+    const zoekOk = lid.naam.toLowerCase().includes(huidigZoek.toLowerCase());
+    if (catOk && zoekOk) { grid.appendChild(bouwKaart(lid)); n++; }
+  });
+  document.getElementById('geenResultaat').classList.toggle('zichtbaar', n === 0);
+  document.getElementById('aantalLeden').textContent = teamleden.length;
+  document.getElementById('teamTeller').innerHTML = `<strong>${n}</strong> lid${n !== 1 ? 'en' : ''} gevonden`;
+}
+
+/* ── MODAL ── */
+function openModal(lid) {
+  document.getElementById('modalNaam').textContent = lid.naam;
+  document.getElementById('modalRol').textContent  = lid.rol;
+  document.getElementById('modalBio').textContent  = lid.bio || '';
+
+  const fw = document.getElementById('modalFotoWrap');
+  fw.innerHTML = lid.foto
+    ? `<img class="modal-foto" src="${lid.foto}" alt="${lid.naam}">`
+    : `<div class="modal-foto-placeholder">${initialen(lid.naam)}</div>`;
+
+  const liEl = document.getElementById('modalLinkedin');
+  liEl.href = lid.linkedin || '#';
+  liEl.style.display = lid.linkedin ? '' : 'none';
+
+  const tags = [lid.industrie, lid.locatie].filter(Boolean);
+  const tw = document.getElementById('modalTagsWrap');
+  if (tags.length) {
+    document.getElementById('modalTags').innerHTML = tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+    tw.style.display = '';
+  } else tw.style.display = 'none';
+
+  const qw = document.getElementById('modalQuoteWrap');
+  if (lid.quote) {
+    document.getElementById('modalQuote').textContent = `"${lid.quote}"`;
+    qw.style.display = '';
+  } else qw.style.display = 'none';
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function sluitModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── CSV IMPORT ── */
+function verwerkCSV(bestand) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lid = csvNaarLid(e.target.result, bestand.name);
+    if (!lid) { toonToast(`⚠️ ${bestand.name}: geen profiel gevonden`, 'fout'); return; }
+    if (teamleden.some(l => l.naam.toLowerCase() === lid.naam.toLowerCase())) {
+      toonToast(`ℹ️ ${lid.naam} staat al in de lijst`, 'fout'); return;
+    }
+    teamleden.push(lid);
+    renderGrid();
+    toonToast(`✅ ${lid.naam} succesvol toegevoegd!`);
+  };
+  reader.readAsText(bestand, 'UTF-8');
+}
+
+document.getElementById('csvInput').addEventListener('change', e => {
+  Array.from(e.target.files).forEach(verwerkCSV);
+  e.target.value = '';
+});
+
+/* ── DRAG & DROP ── */
+let dragN = 0;
+document.addEventListener('dragenter', e => { if (e.dataTransfer.types.includes('Files')) { dragN++; document.getElementById('dropOverlay').classList.add('actief'); } });
+document.addEventListener('dragleave', () => { dragN = Math.max(0, dragN - 1); if (!dragN) document.getElementById('dropOverlay').classList.remove('actief'); });
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault(); dragN = 0;
+  document.getElementById('dropOverlay').classList.remove('actief');
+  Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.csv')).forEach(verwerkCSV);
+});
+
+/* ── FILTER & ZOEK ── */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('actief'));
+    btn.classList.add('actief');
+    huidigFilter = btn.dataset.filter;
+    renderGrid();
+  });
+});
+document.getElementById('zoekbalk').addEventListener('input', e => { huidigZoek = e.target.value; renderGrid(); });
+
+/* ── MODAL SLUITEN ── */
+document.getElementById('modalSluit').addEventListener('click', sluitModal);
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target.id === 'modalOverlay') sluitModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') sluitModal(); });
+
+renderGrid();
+</script>
+</body>
+</html>
